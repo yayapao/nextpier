@@ -40,11 +40,21 @@ test('harness upgrade generates UI, SSE, core, plugins and optional dependencies
   for (const file of [
     'app/harness/page.tsx',
     'app/harness/actions.ts',
+    'app/harness/settings/page.tsx',
+    'app/harness/settings/actions.ts',
+    'app/settings/harness/page.tsx',
+    'app/settings/harness/actions.ts',
+    'app/@harness/(.)harness/page.tsx',
+    'app/@harness/default.tsx',
+    'app/@harness/page.tsx',
+    'app/@harness/[...catchAll]/page.tsx',
     'app/api/harness/chat/route.ts',
     'harness/core/gateway.ts',
     'harness/nextpier.json',
     'harness/plugins/workbench.ts',
     'components/harness/panel.tsx',
+    'components/harness/dialog.tsx',
+    'components/harness/capability-card.tsx',
     'types/harness.ts',
     '.env.harness.example',
   ])
@@ -81,10 +91,47 @@ test('harness upgrade is idempotent and preserves edited source', async (t) => {
   assert.equal(await readFile(path.join(root, 'package.json'), 'utf8'), before);
 });
 
+test('harness management joins settings without overwriting other settings', async (t) => {
+  const root = await fixture(t);
+  const system = path.join(root, 'app/settings/system/page.tsx');
+  const layout = path.join(root, 'app/settings/layout.tsx');
+  await mkdir(path.dirname(system), { recursive: true });
+  await writeFile(system, '// custom system settings\n');
+  await writeFile(layout, '// custom settings layout\n');
+  await upgradeHarness(root, template);
+  assert.equal(await readFile(system, 'utf8'), '// custom system settings\n');
+  assert.equal(await readFile(layout, 'utf8'), '// custom settings layout\n');
+  assert.ok(await exists(path.join(root, 'app/settings/harness/page.tsx')));
+});
+
+test('missing settings template rolls back Harness and keeps existing settings', async (t) => {
+  const root = await fixture(t);
+  const system = path.join(root, 'app/settings/system/page.tsx');
+  await mkdir(path.dirname(system), { recursive: true });
+  await writeFile(system, '// custom system settings\n');
+  const broken = path.join(root, 'broken-settings-template');
+  await cp(template, broken, { recursive: true });
+  await rm(path.join(broken, 'app/settings/harness'), { recursive: true });
+  const before = await readFile(
+    path.join(root, 'nextpier.config.json'),
+    'utf8'
+  );
+  await assert.rejects(upgradeHarness(root, broken), /模板缺少/);
+  assert.equal(await exists(path.join(root, 'harness')), false);
+  assert.equal(await exists(path.join(root, 'app/harness')), false);
+  assert.equal(await readFile(system, 'utf8'), '// custom system settings\n');
+  assert.equal(
+    await readFile(path.join(root, 'nextpier.config.json'), 'utf8'),
+    before
+  );
+});
+
 test('harness path and script conflicts fail before changing the project', async (t) => {
   for (const relative of [
     'harness',
     'app/harness',
+    'app/@harness',
+    'app/settings/harness',
     'components/harness',
     'types/harness.ts',
   ]) {

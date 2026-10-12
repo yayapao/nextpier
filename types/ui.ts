@@ -15,6 +15,8 @@ export type AnimatedIconButtonProps = Omit<
   >;
   label: string;
   iconSize?: number;
+  href?: string;
+  scroll?: boolean;
 };
 
 export type AnimatedNumberProps = {

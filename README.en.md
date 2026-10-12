@@ -60,7 +60,7 @@ npm run upgrade:harness
 npm run harness:doctor
 ```
 
-Chat, call tools, and confirm writes at `/harness`. Demo mode works without an API key. Replace the model, plugins, or store as your app grows; see [Browser Harness](docs/harness.md). The same runtime works on the web and in Wails.
+Global settings at `/settings/system` supports light, dark, and system themes. The toolbar opens AI chat over the current page; `/harness` remains the full chat view. `/settings/harness` shares the settings navigation and provides Halo inputs, capability cards, and Agent / tool tabs in aligned popovers. The old `/harness/settings` address redirects there. Demo mode works without an API key. Replace the model, plugins, or store as your app grows; see [Browser Harness](docs/harness.md). The same runtime works on the web and in Wails.
 
 ## Defaults with a point of view
 

@@ -29,7 +29,8 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 ## 基础组件
 
-- 优先评估 AnimateIcons（`@animateicons/react/lucide/*`）和 Cult UI。本仓库提供 `AnimatedIconButton`、`AnimatedNumber`、`TextureButton`、`MinimalCard`。
+- 优先评估 AnimateIcons（`@animateicons/react/lucide/*`）和 Cult UI。本仓库提供 `AnimatedIconButton`、`AnimatedNumber`、`TextureButton`、`MinimalCard`、`HaloInput`、`HaloCard`、`HaloTabs`、`MorphPopoverContent`。
+- 顶部保留全局设置入口，统一使用 `/settings/system` 和可选 `/settings/harness`，共享 `SettingsShell`；导航链接用 `AnimatedIconButton` 的 `href`，保留 Tooltip、禁用与焦点反馈。
 - 图标按子路径导入，避免整库注册；图标按钮用 `AnimatedIconButton`，同时提供 `label`、Tooltip 和键盘焦点反馈。
 - AnimateIcons 不支持的符号用 Lucide；静态状态图标不必强行动画。动画遵循 `prefers-reduced-motion`，禁止持续装饰动画。
 - Cult UI 按源码引入并适配本项目 token、紧凑尺寸和无障碍要求；保留来源与许可证。
@@ -52,6 +53,9 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 - Harness 通过 `npm run upgrade:harness` 可选接入；核心、适配器、宿主和业务插件分层，模型密钥仅在服务端使用。
 - Harness 新工具同时更新注册与权限；写入、删除必须人工确认。浏览器会话和业务鉴权分别校验，追踪默认不记录载荷。
+- Harness 顶部入口用拦截路由在当前页打开 shadcn Dialog，保留 `/harness` 直达，管理页为 `/settings/harness`，旧 `/harness/settings` 跳转兼容。根 layout 保留 `harness` 插槽，关闭恢复入口焦点；离开对话时取消消息流。
+- Harness 参数使用 Halo Input，桌面上模型、运行限额、输出上限排在一行；保存后验证后续运行确实读取配置。能力使用 Halo Card，Agent、工具、权限和确认标记来自代码注册，默认示例无 Agent 时不得虚构。
+- 能力 Popover 与卡片同宽，锚定静止的卡片外层；按实际卡片高度定位，保留碰撞处理。动画只作用于弹层，禁止跨 Portal 共享 `layoutId`，切换时只保留一个弹层并正确恢复焦点。
 - 基础模板的 Harness 验证用 `npm run test:harness-template`；业务工程生成后用 `npm run test:harness`。不以演示模型结果代替真实模型或浏览器验收。
 
 - 单个代码文件不超过 360 行；按职责拆分，不通过压缩格式达标。生成文件不手工修改。

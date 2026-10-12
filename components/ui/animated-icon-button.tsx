@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
+import Link from 'next/link';
 import type { IconHandle } from '@animateicons/react';
 import { useReducedMotion } from 'motion/react';
 import { Button } from '@/components/ui/button';
@@ -10,11 +11,17 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import type { AnimatedIconButtonProps } from '@/types';
+import { cn } from '@/lib/utils';
 
 export function AnimatedIconButton({
   icon: Icon,
   label,
   iconSize = 16,
+  href,
+  scroll,
+  disabled,
+  className,
+  onClick,
   size = 'icon',
   onMouseEnter,
   onMouseLeave,
@@ -28,6 +35,9 @@ export function AnimatedIconButton({
     if (!reducedMotion) icon.current?.startAnimation();
   };
   const stop = () => icon.current?.stopAnimation();
+  const graphic = (
+    <Icon ref={icon} size={iconSize} isAnimated={false} aria-hidden />
+  );
 
   return (
     <Tooltip>
@@ -37,6 +47,21 @@ export function AnimatedIconButton({
           size={size}
           aria-label={label}
           {...props}
+          asChild={!!href}
+          disabled={href ? undefined : disabled}
+          aria-disabled={disabled || undefined}
+          tabIndex={href && disabled ? -1 : props.tabIndex}
+          className={cn(
+            className,
+            href && disabled && 'pointer-events-none opacity-50'
+          )}
+          onClick={(event) => {
+            if (disabled) {
+              event.preventDefault();
+              return;
+            }
+            onClick?.(event);
+          }}
           onMouseEnter={(event) => {
             start();
             onMouseEnter?.(event);
@@ -54,7 +79,13 @@ export function AnimatedIconButton({
             onBlur?.(event);
           }}
         >
-          <Icon ref={icon} size={iconSize} isAnimated={false} aria-hidden />
+          {href ? (
+            <Link href={href} scroll={scroll}>
+              {graphic}
+            </Link>
+          ) : (
+            graphic
+          )}
         </Button>
       </TooltipTrigger>
       <TooltipContent>{label}</TooltipContent>

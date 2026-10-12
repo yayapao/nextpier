@@ -206,9 +206,20 @@ export interface HarnessSession {
 }
 
 export interface HarnessCapabilities {
-  tools: Array<{ name: string; description: string; category: string }>;
-  agents: Array<{ name: string; displayName: string; description: string }>;
-  skills: Array<{ id: string; name: string; description: string }>;
+  tools: Array<Pick<HarnessTool, 'name' | 'description' | 'category' | 'permission'> & {
+    requiresConfirmation: boolean;
+  }>;
+  agents: Array<Pick<HarnessAgent, 'name' | 'displayName' | 'description' | 'permission'> & {
+    requiresConfirmation: boolean;
+  }>;
+  skills: Array<{
+    id: string;
+    name: string;
+    description: string;
+    toolNames: string[];
+    agentNames: string[];
+    contextTypes: string[];
+  }>;
   contextProviders: Array<{ type: string; displayName: string; description: string }>;
 }
 

@@ -138,16 +138,23 @@ export class HarnessRegistry {
         name: t.name,
         description: t.description,
         category: t.category,
+        permission: t.permission,
+        requiresConfirmation: t.permission !== 'read' || Boolean(t.requiresConfirmation),
       })),
       agents: this.getAllAgents().map((a) => ({
         name: a.name,
         displayName: a.displayName,
         description: a.description,
+        permission: a.permission,
+        requiresConfirmation: a.permission !== 'read' || Boolean(a.requiresConfirmation),
       })),
       skills: this.getAllSkills().map((s) => ({
         id: s.id,
         name: s.name,
         description: s.description,
+        toolNames: s.tools.map((tool) => tool.name),
+        agentNames: (s.agents ?? []).map((agent) => agent.name),
+        contextTypes: (s.contextProviders ?? []).map((provider) => provider.type),
       })),
       contextProviders: this.getAllContextProviders().map((cp) => ({
         type: cp.type,

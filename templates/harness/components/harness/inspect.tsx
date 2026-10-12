@@ -1,4 +1,5 @@
 import type { HarnessInitialData } from '@/types';
+import { HarnessCapabilitiesList } from './capabilities';
 import { Badge } from '@/components/ui/badge';
 import {
   Dialog,
@@ -38,24 +39,7 @@ export function HarnessInspect({
         </DialogHeader>
         <div className="max-h-[65vh] min-w-0 overflow-auto">
           {view === 'capabilities' ? (
-            <ul className="divide-y">
-              {data.capabilities.tools.map((tool) => (
-                <li
-                  key={tool.name}
-                  className="flex flex-wrap items-center justify-between gap-2 py-3 text-sm"
-                >
-                  <span>{tool.description}</span>
-                  <code className="text-xs text-muted-foreground">
-                    {tool.name}
-                  </code>
-                </li>
-              ))}
-              {data.capabilities.agents.map((agent) => (
-                <li key={agent.name} className="py-3 text-sm">
-                  {agent.displayName}
-                </li>
-              ))}
-            </ul>
+            <HarnessCapabilitiesList capabilities={data.capabilities} />
           ) : data.logs.length === 0 ? (
             <p className="py-4 text-sm text-muted-foreground">暂无记录</p>
           ) : (
@@ -81,7 +65,7 @@ export function HarnessInspect({
                 {log.error && (
                   <p className="mt-3 text-sm text-destructive">{log.error}</p>
                 )}
-                <ol className="mt-3 space-y-2 text-xs text-muted-foreground">
+                <ol className="mt-3 flex flex-col gap-2 text-xs text-muted-foreground">
                   {log.trace?.map((entry) => (
                     <li key={entry.id} className="flex justify-between gap-2">
                       <span>{entry.label}</span>

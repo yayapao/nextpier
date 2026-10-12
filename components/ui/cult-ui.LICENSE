@@ -1,5 +1,9 @@
-Cult UI components: Minimal Card, Animated Number, Texture Button
+Cult UI components: Minimal Card, Animated Number, Texture Button, Halo Input, Halo Card, Halo Tabs, Popover
 Source: https://www.cult-ui.com/docs/components/minimal-card
+Sources: https://www.cult-ui.com/docs/components/halo-input
+         https://www.cult-ui.com/docs/components/halo-card
+         https://www.cult-ui.com/docs/components/halo-tabs
+         https://www.cult-ui.com/docs/components/popover
 Repository: https://github.com/nolly-studio/cult-ui
 Adapted from the Niu workbench to NextPier semantic tokens and compact sizing.
 

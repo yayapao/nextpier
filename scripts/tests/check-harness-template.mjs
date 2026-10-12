@@ -111,6 +111,8 @@ try {
       'components/harness',
       'lib/harness',
       'app/harness',
+      'app/settings',
+      'app/@harness',
       'app/api/harness',
       'types/harness.ts',
     ],

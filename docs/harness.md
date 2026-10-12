@@ -11,7 +11,7 @@ npm run upgrade:harness
 npm run harness:doctor
 ```
 
-CLI 生成源码、注册类型、打开导航入口，并执行 `npm install`，增加 `openai`、`eventsource-parser` 和开发依赖 `tsx`。Web 首页保持工作台；AI 对话在 `/harness`，可从顶部的对话图标进入。
+CLI 生成源码、注册类型、打开导航入口，并执行 `npm install`，增加 `openai`、`eventsource-parser` 和开发依赖 `tsx`。顶部对话图标在当前业务页打开 AI 对话弹窗；直接访问 `/harness` 显示完整对话页。全局设置中的 `/settings/harness` 提供运行参数与已注册能力管理；旧 `/harness/settings` 跳转到该页面。
 
 已有 dev 服务时重新加载页面；未启动时执行 `npm run dev`。集成命令本身不启动服务、不调用模型、不构建。
 
@@ -23,6 +23,20 @@ npm install
 ```
 
 重复执行保留已生成的源码和业务修改。未知目录、同名脚本或文件冲突会使命令退出；生成中途失败会回滚本次文件和元数据。安装依赖失败时工程保留，重新运行 `npm install` 即可。
+
+## 对话与管理
+
+顶部入口通过 `app/@harness/(.)harness/page.tsx` 拦截路由打开 shadcn Dialog，保留背景页面；关闭、浏览器后退返回原页面，前进可重新打开。刷新 `/harness` 后显示完整页。默认路由、首页空路由和兜底路由均返回 `null`，进入管理页或其他页面时清除弹窗。两种对话视图复用会话列表、消息流、输入、确认、能力与运行记录；再次进入时选择最近的会话，关闭时中止当前消息流并保留已保存记录。
+
+管理页的模型、运行限额和单轮输出上限使用 Halo Input，桌面上排在一行。服务端校验模型名称、1–32 轮和 256–64000 tokens；运行中拒绝修改，保存后 Gateway 在下一次运行读取配置。演示模式固定使用 `demo` 模型，不能通过输入框变成真实模型。
+
+已注册能力按 Skill 展示 Halo Card 的标题与描述，点击同宽 Popover 查看对应 Agent 和工具。名称、描述、Skill 关系、权限及确认标记由 Registry 从代码注册定义投影；写入和删除始终显示需确认。默认工作台插件包含三个工具和便签上下文，没有 Agent。能力卡片不提供独立运行入口。
+
+设置页复用常规设置的侧栏与窄屏导航。管理数据只传入模式、参数和注册能力，不将会话消息和运行日志带入管理表单。模型、运行限额与输出上限使用 Halo Input，Agent / 工具使用 Halo Tabs；保存用 Texture Button，顶部入口、返回、恢复、关闭及对话工具使用 AnimateIcons。
+
+Halo Input、Halo Card 和 Popover 沿用 Niu 的 token 适配与稳定定位：静止锚点、真实宽高、局部入场动画、单弹层切换、焦点恢复及减少动态效果，具体约束见 [组件与样式](design-system.md)。
+
+已有项目不会由重复升级自动覆盖。迁移旧模板时，先合并新 UI 组件、`components/settings/`、`app/settings/layout.tsx`、常规设置和 `app/settings/harness/`，再合并 `components/harness/`、兼容管理路由、运行配置、Registry 投影和 `app/@harness/`。根 `app/layout.tsx` 接收可选 `harness: React.ReactNode` 并在 Provider 内渲染 `{harness}`；顶部补齐 `HeaderActions`。保留业务插件、鉴权和存储；没有根插槽时链接只会进入完整页。CLI 只占用 `app/settings/harness/`，不覆盖其余设置与布局；已有自定义插槽或设置路由须逐项合并。
 
 ## 先试演示，再接模型
 
@@ -57,6 +71,9 @@ OPENAI_BASE_URL=https://api.openai.com/v1
 | `harness/browser/`              | 当前浏览器的会话边界、宿主配置与 SSE 编码        |
 | `lib/harness/runtime.ts`        | Next.js Cookie 身份与进程内运行时注册            |
 | `app/harness/`                  | Server Component 页面和会话、确认、停止操作      |
+| `app/harness/settings/`         | 旧管理地址及 Server Action 兼容入口             |
+| `app/settings/harness/`         | 统一设置内的管理页与参数保存                    |
+| `app/@harness/`                 | 当前业务页的对话弹窗、默认和兜底空路由          |
 | `app/api/harness/chat/route.ts` | `POST` 消息流                                    |
 | `components/harness/`           | 对话、输入、确认、能力列表和运行记录             |
 | `types/harness.ts`              | 界面共享类型，从 `types/index.ts` 导出           |
@@ -94,7 +111,7 @@ const gateway = new HarnessGateway({
 
 默认通过随机 HttpOnly Cookie 隔离浏览器会话；消息流还校验 Origin 与会话归属。Server Actions 负责新建、读取、删除、确认和停止。工具确认仍属于授权浏览器的操作，不代替业务鉴权。
 
-当前模板使用内存存储：会话、便签、日志及待确认状态在进程重启后丢失。每个浏览器最多 40 个会话，示例便签最多 100 条；单次运行最多 8 轮、120 秒。日志默认不记录模型和工具载荷。
+当前模板使用内存存储：会话、便签、日志、运行配置及待确认状态在进程重启后丢失。配置和会话按浏览器隔离，重启后参数恢复默认。每个浏览器最多 40 个会话，示例便签最多 100 条；单次运行默认 8 轮、2048 tokens，最多 120 秒。日志默认不记录模型和工具载荷。
 
 公开业务应用需要将浏览器示例身份替换为现有登录用户，并在业务工具和存储层校验权限。需要历史记录时替换 Store，数据写入 `NEXTPIER_DATA_DIR` 或数据库；同一活动会话的请求须到同一进程，多实例部署需要共享运行状态与确认通道。
 
@@ -118,7 +135,7 @@ npm run test:cli
 npm run test:harness-template
 ```
 
-第二条命令在临时目录安装测试所需的 SDK 与解析器，生成完整工程，执行 TypeScript、ESLint 和核心、模型适配器、SSE 测试。需要 npm 缓存或网络；不启动 Next.js、不请求真实模型，结束后清理临时目录。
+第二条命令在临时目录安装测试所需的 SDK 与解析器，生成完整工程，执行 TypeScript、ESLint 和核心、模型适配器、SSE、配置生效与能力关系测试。需要 npm 缓存或网络；不启动 Next.js、不请求真实模型，结束后清理临时目录。
 
 已升级的业务项目：
 
@@ -128,6 +145,6 @@ npm run lint
 npm run test:harness
 ```
 
-测试覆盖写入确认、取消与停止、权限拒绝、会话归属、缓存隔离、流式事件和生成冲突。浏览器界面、真实模型连通性和 Wails 原生窗口仍需分别验收。
+测试覆盖写入确认、取消与停止、断开消息流、权限拒绝、会话归属、缓存隔离、配置生效、能力投影、设置目录冲突及回滚。浏览器验收需检查全局设置导航、主题保存与重载、当前页打开弹窗、直达与刷新、前进后退、进入管理页后无残留弹层、同宽 Popover、快速切换和焦点恢复；真实模型连通性和 Wails 原生窗口仍需分别验收。
 
 [建项 Prompt](ai-agent.md) · [开发指南](development.md) · [文档目录](README.md)

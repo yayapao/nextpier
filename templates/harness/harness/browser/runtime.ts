@@ -1,10 +1,11 @@
 import { HarnessGateway } from '../core';
-import type { HarnessModel, HarnessPlugin } from '../core';
+import type { HarnessModel, HarnessPlugin, OrchestratorConfig } from '../core';
 import { createMemoryHarnessStore } from '../adapters/memory-store';
 import { createDemoModel } from '../adapters/demo-model';
 import { createOpenAiCompatibleModel } from '../adapters/openai-model';
 import { createWorkbenchPlugin } from '../plugins/workbench';
 import type { HarnessInitialData } from '../../types/harness';
+import { harnessSettingsSchema } from './settings';
 
 export function createBrowserHarnessRuntime(
   options: {
@@ -26,12 +27,17 @@ export function createBrowserHarnessRuntime(
   const sessions = new Set<string>();
   const plugins = options.plugins ?? [createWorkbenchPlugin()];
   const allowedTools = new Set(['get_time', 'list_notes', 'save_note']);
+  let settings: OrchestratorConfig = {
+    model:
+      mode === 'demo' ? 'demo' : process.env.HARNESS_MODEL?.trim() || 'demo',
+    maxIterations: 8,
+    maxTokens: 2048,
+  };
+  const isIdle = () =>
+    [...sessions].every((id) => gateway.getSession(id)?.runState === 'idle');
   const gateway = new HarnessGateway({
-    config: {
-      model: process.env.HARNESS_MODEL?.trim() || 'demo',
-      maxIterations: 8,
-      maxTokens: 2048,
-    },
+    config: settings,
+    loadConfig: async () => ({ ...settings }),
     model:
       options.model ??
       (mode === 'demo'
@@ -55,8 +61,15 @@ export function createBrowserHarnessRuntime(
   return {
     gateway,
     hasSession: (id: string) => sessions.has(id),
-    isIdle: () =>
-      [...sessions].every((id) => gateway.getSession(id)?.runState === 'idle'),
+    isIdle,
+    updateSettings(input: OrchestratorConfig) {
+      const next = harnessSettingsSchema.parse(input);
+      if (mode === 'demo' && next.model !== 'demo')
+        throw new Error('演示模式不支持切换模型');
+      if (!isIdle()) throw new Error('请先停止当前任务');
+      settings = next;
+      return { ...settings };
+    },
     async createSession() {
       if (sessions.size >= 40)
         throw new Error('会话数量已达上限，请删除旧会话');
@@ -71,6 +84,7 @@ export function createBrowserHarnessRuntime(
       );
       return {
         mode,
+        settings: { ...settings },
         sessionId: id,
         sessions: conversations
           .filter((session) => session !== null)

@@ -87,6 +87,8 @@
 
 ```text
 请为当前 NextPier 项目接入 Browser Harness，先读 docs/harness.md，再运行 npm run upgrade:harness。
+顶部入口使用当前页对话弹窗，保留 /harness 直达；全局设置中的 /settings/harness 使用 Halo 参数、能力卡片、Halo Tabs 与同宽明细 Popover，保留旧 /harness/settings 的跳转兼容。
+保留根 layout 的 harness 插槽，能力关系来自代码注册；保存配置后验证实际运行读取，界面与运行时不能脱节。
 把示例插件换成工单能力：搜索和读取工单为 read，修改状态为 write，删除为 destructive。
 工具调用现有业务服务，共用页面的身份与权限；写入和删除必须人工确认。
 有现成持久化层时复用它保存会话；没有时说明内存会话的生命周期。

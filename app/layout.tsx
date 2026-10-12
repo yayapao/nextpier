@@ -14,8 +14,10 @@ export const metadata = defaultMetadata;
 
 export default async function RootLayout({
   children,
+  harness,
 }: Readonly<{
   children: React.ReactNode;
+  harness?: React.ReactNode;
 }>) {
   await connection();
   const config = await readConfig();
@@ -24,8 +26,10 @@ export default async function RootLayout({
   return (
     <html
       lang="zh-CN"
-      className={initialTheme}
-      style={{ colorScheme: initialTheme }}
+      className={initialTheme === 'system' ? undefined : initialTheme}
+      style={{
+        colorScheme: initialTheme === 'system' ? undefined : initialTheme,
+      }}
       suppressHydrationWarning
     >
       <body className={`antialiased min-h-screen`}>
@@ -43,6 +47,7 @@ export default async function RootLayout({
                   <main id="main-content" className="min-w-0">
                     {children}
                   </main>
+                  {harness}
                 </QueryProvider>
               </GlobalProvider>
               <Toaster position="top-center" duration={3000} />

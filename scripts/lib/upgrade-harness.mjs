@@ -16,12 +16,14 @@ const scripts = {
     'tsx --test harness/core/*.test.ts harness/adapters/*.test.ts harness/tests/*.test.ts',
 };
 const typeExport =
-  "export type { HarnessInitialData, HarnessConversationSummary, HarnessChatState } from './harness';";
+  "export type { HarnessInitialData, HarnessConversationSummary, HarnessChatState, HarnessPanelProps, HarnessCapabilityCardProps, HarnessCapabilityDetailsProps, HarnessSettingsData } from './harness';";
 const ownedPaths = [
   'harness',
   'lib/harness',
   'components/harness',
   'app/harness',
+  'app/settings/harness',
+  'app/@harness',
   'app/api/harness',
   'types/harness.ts',
   '.env.harness.example',

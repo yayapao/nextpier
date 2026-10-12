@@ -59,6 +59,18 @@ export function HarnessComposer({
                     rows={3}
                     disabled={busy}
                     className="max-h-40 min-h-20 resize-y"
+                    onKeyDown={(event) => {
+                      if (
+                        event.key !== 'Enter' ||
+                        event.shiftKey ||
+                        event.nativeEvent.isComposing ||
+                        event.keyCode === 229
+                      )
+                        return;
+                      event.preventDefault();
+                      if (!busy && !form.formState.isSubmitting)
+                        event.currentTarget.form?.requestSubmit();
+                    }}
                   />
                 </FormControl>
                 <FormMessage />

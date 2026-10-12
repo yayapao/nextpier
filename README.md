@@ -60,7 +60,7 @@ npm run upgrade:harness
 npm run harness:doctor
 ```
 
-在 `/harness` 对话、调用工具、确认操作。默认演示模式无需 Key；接模型、换插件或存储，见 [Browser Harness](docs/harness.md)。Web 与 Wails 共用这套运行时。
+顶部全局设置进入 `/settings/system`，支持浅色、深色和跟随系统。AI 对话入口在当前页打开弹窗，`/harness` 保留完整对话页；统一设置中的 `/settings/harness` 提供 Halo 运行参数、能力卡片及同宽 Agent / 工具明细，旧 `/harness/settings` 自动跳转。默认演示模式无需 Key；接模型、换插件或存储，见 [Browser Harness](docs/harness.md)。Web 与 Wails 共用这套运行时。
 
 ## 默认取舍
 

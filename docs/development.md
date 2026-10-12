@@ -60,7 +60,7 @@ npm install
 
 升级后增加 `desktop:doctor`、`desktop:dev`、`desktop:build`，用法见 [桌面指南](desktop.md)。ChatGPT / Codex 的执行规则以 [AGENTS.md](../AGENTS.md) 为准。
 
-Harness 升级后增加 `harness:doctor` 和 `test:harness`，入口为 `/harness`。模型、会话与插件配置见 [Browser Harness](harness.md)。
+顶部全局设置入口为 `/settings/system`，可保存浅色、深色或跟随系统。Harness 升级后增加 `harness:doctor` 和 `test:harness`，对话入口为 `/harness`，管理页为 `/settings/harness`。模型、会话与插件配置见 [Browser Harness](harness.md)。
 
 ## 文件放哪里
 

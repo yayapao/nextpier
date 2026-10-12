@@ -143,6 +143,30 @@ test('deleting an idle session removes its messages and run logs', async () => {
   assert.equal(runtime.hasSession(id), false);
 });
 
+test('aborting the chat request releases a pending confirmation without writing', async () => {
+  const runtime = createBrowserHarnessRuntime({ mode: 'demo' });
+  const id = await runtime.createSession();
+  const abort = new AbortController();
+  const events = await collect(
+    await createChatResponse(
+      request(id, '保存便签：关闭弹窗', 'http://nextpier.test', abort.signal),
+      runtime
+    ),
+    (event) => {
+      if (event.type === 'confirmation_request') abort.abort();
+    }
+  );
+  assert.ok(events.some((event) => event.type === 'confirmation_request'));
+  assert.ok(!events.some((event) => event.type === 'tool_call_started'));
+  assert.equal(runtime.gateway.getSession(id)?.runState, 'idle');
+  assert.equal((await runtime.snapshot(id)).logs[0].status, 'stopped');
+  await collect(await createChatResponse(request(id, '列出便签'), runtime));
+  assert.match(
+    (await runtime.snapshot(id)).messages.at(-1)!.content,
+    /"notes": \[\]/
+  );
+});
+
 test('already aborted requests and invalid messages never execute tools', async () => {
   const runtime = createBrowserHarnessRuntime({ mode: 'demo' });
   const id = await runtime.createSession();

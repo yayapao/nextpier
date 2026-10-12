@@ -9,8 +9,8 @@
  * Global user configuration
  */
 export interface UserConfig {
-  /** UI theme preference - 'light' or 'dark' */
-  theme: 'light' | 'dark';
+  /** UI theme preference */
+  theme: 'light' | 'dark' | 'system';
 }
 
 /**

@@ -24,22 +24,31 @@ export function useHarness(initialData: HarnessInitialData) {
   const [state, setState] = useState(idle);
   const controller = useRef<AbortController | null>(null);
   const locked = useRef(false);
-  useEffect(() => () => controller.current?.abort(), []);
+  const mounted = useRef(true);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      controller.current?.abort();
+    };
+  }, []);
 
   async function manage(action: () => Promise<HarnessInitialData>) {
     if (locked.current) return;
     locked.current = true;
     setState({ ...idle, busy: true });
     try {
-      setData(await action());
+      const next = await action();
+      if (mounted.current) setData(next);
     } catch (error) {
-      setState({
-        ...idle,
-        error: error instanceof Error ? error.message : '操作失败',
-      });
+      if (mounted.current)
+        setState({
+          ...idle,
+          error: error instanceof Error ? error.message : '操作失败',
+        });
     } finally {
       locked.current = false;
-      setState((current) => ({ ...current, busy: false }));
+      if (mounted.current) setState((current) => ({ ...current, busy: false }));
     }
   }
 
@@ -53,6 +62,7 @@ export function useHarness(initialData: HarnessInitialData) {
     let reader: ReadableStreamDefaultReader<{ data: string }> | undefined;
     try {
       const current = sessionId ? data : await createConversation();
+      if (abort.signal.aborted) return;
       sessionId = current.sessionId;
       const assistantId = crypto.randomUUID();
       setData({
@@ -134,38 +144,42 @@ export function useHarness(initialData: HarnessInitialData) {
       await reader?.cancel().catch(() => undefined);
       if (sessionId && !abort.signal.aborted) {
         try {
-          setData(await loadConversation(sessionId));
+          const next = await loadConversation(sessionId);
+          if (mounted.current) setData(next);
         } catch {}
       }
       controller.current = null;
       locked.current = false;
-      setState((current) => ({
-        ...current,
-        busy: false,
-        progress: '',
-        confirmation: null,
-      }));
+      if (mounted.current)
+        setState((current) => ({
+          ...current,
+          busy: false,
+          progress: '',
+          confirmation: null,
+        }));
     }
   }
 
   async function answer(value: string) {
     if (!state.confirmation) return;
     await confirmTool(data.sessionId, state.confirmation.id, value);
-    setState((current) => ({
-      ...current,
-      confirmation: null,
-      progress: '执行中',
-    }));
+    if (mounted.current)
+      setState((current) => ({
+        ...current,
+        confirmation: null,
+        progress: '执行中',
+      }));
   }
 
   async function stop() {
     try {
       await stopConversation(data.sessionId);
     } catch (error) {
-      setState((current) => ({
-        ...current,
-        error: error instanceof Error ? error.message : '停止失败',
-      }));
+      if (mounted.current)
+        setState((current) => ({
+          ...current,
+          error: error instanceof Error ? error.message : '停止失败',
+        }));
     }
   }
 
