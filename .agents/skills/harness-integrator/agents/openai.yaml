@@ -1,0 +1,4 @@
+interface:
+  display_name: 'Harness 项目接入'
+  short_description: '将 NextPier Harness 接入现有业务项目，开发工具、Agent、流程和管理界面'
+  default_prompt: '使用 $harness-integrator 将 NextPier Harness 接入指定项目，发现业务工具并完成基础 Agent、流程、对话框与管理页。'

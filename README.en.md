@@ -62,6 +62,16 @@ npm run harness:doctor
 
 Global settings at `/settings/system` supports light, dark, and system themes. The toolbar opens AI chat over the current page; `/harness` remains the full chat view. `/settings/harness` shares the settings navigation and provides Halo inputs, capability cards, and Agent / tool tabs in aligned popovers. The old `/harness/settings` address redirects there. Demo mode works without an API key. Replace the model, plugins, or store as your app grows; see [Browser Harness](docs/harness.md). The same runtime works on the web and in Wails.
 
+## Integrate into an existing project
+
+Give Codex the [integration prompt](docs/harness-integration.md) with the NextPier source and target project paths. The `harness-integrator` skill discovers and reviews business tools, implements a basic agent and executable workflow, and integrates global chat and Harness settings using the target stack.
+
+```bash
+npm run harness:prepare -- --project /path/to/existing-project
+```
+
+This command prepares an external source kit and discovery report without modifying the target. Codex performs the actual integration. Non-Node backends reuse the core through a deployable Node adapter service.
+
 ## Defaults with a point of view
 
 - Next.js 16.2, React 19, TypeScript, Tailwind CSS 4.

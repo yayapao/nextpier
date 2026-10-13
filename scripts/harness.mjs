@@ -7,12 +7,15 @@ import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 import { exists } from './lib/upgrade-wails.mjs';
 import { upgradeHarness } from './lib/upgrade-harness.mjs';
+import { prepareHarnessIntegration } from './lib/prepare-harness.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const { values, positionals } = parseArgs({
   allowPositionals: true,
   options: {
     'skip-install': { type: 'boolean' },
+    project: { type: 'string' },
+    output: { type: 'string' },
     help: { type: 'boolean', short: 'h' },
   },
 });
@@ -20,15 +23,32 @@ const { values, positionals } = parseArgs({
 async function main() {
   if (values.help || !positionals.length) {
     console.log(
-      '用法：node scripts/harness.mjs upgrade [--skip-install]\n      node scripts/harness.mjs doctor'
+      '用法：node scripts/harness.mjs upgrade [--skip-install]\n      node scripts/harness.mjs doctor\n      node scripts/harness.mjs prepare --project <目标项目> [--output <迁移包目录>]'
     );
     return;
   }
   const [command] = positionals;
-  if (!['upgrade', 'doctor'].includes(command) || positionals.length !== 1)
+  if (
+    !['upgrade', 'doctor', 'prepare'].includes(command) ||
+    positionals.length !== 1
+  )
     throw new Error('未知命令');
-  if (command === 'doctor' && values['skip-install'])
+  if (command !== 'upgrade' && values['skip-install'])
     throw new Error('--skip-install 仅用于 upgrade');
+  if (command === 'prepare') {
+    if (!values.project) throw new Error('prepare 需要 --project 指定目标项目');
+    const result = await prepareHarnessIntegration(
+      path.resolve(values.project),
+      root,
+      { output: values.output }
+    );
+    console.log(
+      `Harness 迁移包：${result.output}\n建议适配方式：${result.strategy}\n待审核候选工具：${result.candidateCount}\n将 ${path.join(result.output, 'INTEGRATE.md')} 交给 Codex 继续实施；目标项目未修改。`
+    );
+    return;
+  }
+  if (values.project || values.output)
+    throw new Error('--project 和 --output 仅用于 prepare');
   if (command === 'upgrade') {
     const result = await upgradeHarness(
       root,

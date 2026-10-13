@@ -44,19 +44,20 @@ npm install
 
 在项目根目录执行：
 
-| 命令                            | 用途                                        |
-| ------------------------------- | ------------------------------------------- |
-| `npm run dev`                   | Web 开发服务，端口 3900                     |
-| `npm run build`                 | Web 生产构建                                |
-| `npm run start`                 | 启动 Web 构建产物，默认端口 3000            |
-| `npm run init:project -- --project ../my-app --name my-app` | 将当前模板导入独立的目标目录 |
-| `npm run typecheck`             | TypeScript 检查                             |
-| `npm run lint`                  | ESLint 检查                                 |
-| `npm run test:cli`              | Wails、Harness 升级与运行时收集测试         |
-| `npm run test:desktop-template` | 临时 Wails 工程的 Go 测试，需要桌面编译依赖 |
-| `npm run upgrade:wails`         | 生成桌面工程                                |
-| `npm run upgrade:harness`       | 生成 AI 对话工程并安装依赖                  |
-| `npm run test:harness-template` | 临时 Harness 工程的类型、Lint 与运行时测试  |
+| 命令                                                        | 用途                                        |
+| ----------------------------------------------------------- | ------------------------------------------- |
+| `npm run dev`                                               | Web 开发服务，端口 3900                     |
+| `npm run build`                                             | Web 生产构建                                |
+| `npm run start`                                             | 启动 Web 构建产物，默认端口 3000            |
+| `npm run init:project -- --project ../my-app --name my-app` | 将当前模板导入独立的目标目录                |
+| `npm run typecheck`                                         | TypeScript 检查                             |
+| `npm run lint`                                              | ESLint 检查                                 |
+| `npm run test:cli`                                          | Wails、Harness 升级与运行时收集测试         |
+| `npm run test:desktop-template`                             | 临时 Wails 工程的 Go 测试，需要桌面编译依赖 |
+| `npm run upgrade:wails`                                     | 生成桌面工程                                |
+| `npm run upgrade:harness`                                   | 生成 AI 对话工程并安装依赖                  |
+| `npm run harness:prepare -- --project /path/to/target`      | 为任意已有项目准备迁移包和候选工具报告      |
+| `npm run test:harness-template`                             | 临时 Harness 工程的类型、Lint 与运行时测试  |
 
 升级后增加 `desktop:doctor`、`desktop:dev`、`desktop:build`，用法见 [桌面指南](desktop.md)。ChatGPT / Codex 的执行规则以 [AGENTS.md](../AGENTS.md) 为准。
 

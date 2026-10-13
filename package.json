@@ -33,7 +33,8 @@
     "test:harness-template": "node scripts/tests/check-harness-template.mjs",
     "init:project": "node scripts/init.mjs",
     "upgrade:wails": "node scripts/desktop.mjs upgrade",
-    "upgrade:harness": "node scripts/harness.mjs upgrade"
+    "upgrade:harness": "node scripts/harness.mjs upgrade",
+    "harness:prepare": "node scripts/harness.mjs prepare"
   },
   "dependencies": {
     "@animateicons/react": "^0.6.0",

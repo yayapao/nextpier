@@ -83,6 +83,8 @@
 
 ## 接入业务 AI
 
+以下示例面向已有 NextPier 项目。给其他技术栈或任意已有项目接入时，使用 [跨项目接入 Prompt](harness-integration.md)，由 `harness-integrator` Skill 完成宿主适配、真实工具发现、基础 Agent 与流程。
+
 已有 NextPier 工程时，可以直接追加这段：
 
 ```text

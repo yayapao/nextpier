@@ -2,6 +2,8 @@
 
 应用内的 AI 对话运行时，沿用 Niu 的 Gateway、Orchestrator、Registry 与插件架构。浏览器负责交互，服务端调用模型和工具。
 
+给非 NextPier 或已有业务工程接入时，使用 [跨项目接入 Prompt](harness-integration.md) 和仓库内 `harness-integrator` Skill。`npm run harness:prepare -- --project /path/to/target` 准备源码包与候选工具报告，再由 Codex 按目标技术栈完成业务工具、Agent、流程、对话入口和管理页。
+
 ## 一条命令接入
 
 在已安装 npm 依赖的 NextPier 项目根目录执行：
@@ -71,9 +73,9 @@ OPENAI_BASE_URL=https://api.openai.com/v1
 | `harness/browser/`              | 当前浏览器的会话边界、宿主配置与 SSE 编码        |
 | `lib/harness/runtime.ts`        | Next.js Cookie 身份与进程内运行时注册            |
 | `app/harness/`                  | Server Component 页面和会话、确认、停止操作      |
-| `app/harness/settings/`         | 旧管理地址及 Server Action 兼容入口             |
-| `app/settings/harness/`         | 统一设置内的管理页与参数保存                    |
-| `app/@harness/`                 | 当前业务页的对话弹窗、默认和兜底空路由          |
+| `app/harness/settings/`         | 旧管理地址及 Server Action 兼容入口              |
+| `app/settings/harness/`         | 统一设置内的管理页与参数保存                     |
+| `app/@harness/`                 | 当前业务页的对话弹窗、默认和兜底空路由           |
 | `app/api/harness/chat/route.ts` | `POST` 消息流                                    |
 | `components/harness/`           | 对话、输入、确认、能力列表和运行记录             |
 | `types/harness.ts`              | 界面共享类型，从 `types/index.ts` 导出           |

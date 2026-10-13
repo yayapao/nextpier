@@ -62,6 +62,16 @@ npm run harness:doctor
 
 顶部全局设置进入 `/settings/system`，支持浅色、深色和跟随系统。AI 对话入口在当前页打开弹窗，`/harness` 保留完整对话页；统一设置中的 `/settings/harness` 提供 Halo 运行参数、能力卡片及同宽 Agent / 工具明细，旧 `/harness/settings` 自动跳转。默认演示模式无需 Key；接模型、换插件或存储，见 [Browser Harness](docs/harness.md)。Web 与 Wails 共用这套运行时。
 
+## 迁移到已有项目
+
+将 [跨项目接入 Prompt](docs/harness-integration.md) 发给 Codex，指定当前 NextPier 的源码路径与目标项目路径。`harness-integrator` Skill 会发现和审核业务工具，完成基础 Agent、可执行流程、全局对话入口与管理页，并适配目标技术栈。
+
+```bash
+npm run harness:prepare -- --project /path/to/existing-project
+```
+
+该命令只生成外部迁移包与发现报告，目标项目的实际接入由 Codex 完成，无需先初始化为 NextPier。其他语言后端通过可部署的 Node 适配服务复用核心，详见 [跨项目接入](docs/harness-integration.md)。
+
 ## 默认取舍
 
 - Next.js 16.2、React 19、TypeScript、Tailwind CSS 4。
