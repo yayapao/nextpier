@@ -9,13 +9,17 @@ description: 将 NextPier Browser Harness 接入现有项目，发现并审核�
 
 ## 取得源码与证据
 
-先确认目标项目、源码位置及用户要求的业务场景。读取目标项目适用的 AGENTS.md、依赖、路由、服务层、鉴权和测试命令；保留工作区改动。源码位置使用用户指定的本地 NextPier 或其 Git 仓库；读取模板不意味着用模板规范替换目标项目规范。
+先确认目标项目、源码位置及用户要求的业务场景。读取目标项目适用的 AGENTS.md、依赖、路由、服务层、鉴权和测试命令；保留工作区改动。源码位置可以是用户指定的本地 NextPier checkout 或 Git 仓库；读取模板不意味着用模板规范替换目标项目规范。
 
-源码仓库模式：从本技能目录向上找到 NextPier 根目录，在任意工作目录执行：
+GitHub 源仓库模式：如果用户给出 `https://github.com/.../nextpier.git`、SSH 仓库地址或其他 Git 仓库地址，先在目标项目之外获取源码，并记录实际 commit。默认使用浅 clone 的 `main`；用户指定分支或 tag 时用 `git clone --depth 1 --branch <版本>`，指定完整 commit SHA 时使用普通 clone 或按该 SHA fetch 后 `git checkout --detach <SHA>`。私有仓库只使用现有 Git 凭据，不把 token 写入 URL、Prompt、迁移包或日志。不要把 GitHub `blob`/`raw` 单文件 URL 当作完整源码，因为它不包含脚本、引用文档和 UI 依赖。
+
+本地源仓库模式：如果已有 NextPier checkout，验证其 Git 根目录和目标版本后直接复用。在任意工作目录执行准备命令：
 
 ```bash
 node "/path/to/nextpier/scripts/harness.mjs" prepare --project "/path/to/target"
 ```
+
+GitHub checkout 准备完成后，使用同一条命令，将 `/path/to/nextpier` 替换为实际 clone 目录。源目录、迁移包和目标项目必须相互独立。
 
 读取命令返回的迁移包中的 manifest.json 和 discovery.json。命令不修改目标项目，不安装依赖，不执行发现的工具。无 TypeScript 依赖时只有文件与 OpenAPI 发现，继续用 rg 和源码阅读补齐符号；扫描截断、跳过的大文件和其他语言须补查。
 

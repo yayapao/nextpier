@@ -52,7 +52,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 ## 文件与验证
 
 - Harness 通过 `npm run upgrade:harness` 可选接入；核心、适配器、宿主和业务插件分层，模型密钥仅在服务端使用。
-- 跨项目迁移使用 `.agents/skills/harness-integrator/SKILL.md` 与 `npm run harness:prepare -- --project <目标>`，先生成外部迁移包和候选报告，再按目标技术栈实施；候选不得自动注册，真实业务工具、基础 Agent 和流程须有源码映射与运行验证。
+- 跨项目迁移使用 `.agents/skills/harness-integrator/SKILL.md` 与 `docs/harness-integration.md`；Prompt 默认从 `https://github.com/yayapao/nextpier.git` 在目标项目之外 clone，也支持已验证的本地 checkout。先生成外部迁移包和候选报告，再按目标技术栈实施；候选不得自动注册，真实业务工具、基础 Agent 和流程须有源码映射与运行验证。
 - Harness 新工具同时更新注册与权限；写入、删除必须人工确认。浏览器会话和业务鉴权分别校验，追踪默认不记录载荷。
 - Harness 顶部入口用拦截路由在当前页打开 shadcn Dialog，保留 `/harness` 直达，管理页为 `/settings/harness`，旧 `/harness/settings` 跳转兼容。根 layout 保留 `harness` 插槽，关闭恢复入口焦点；离开对话时取消消息流。
 - Harness 参数使用 Halo Input，桌面上模型、运行限额、输出上限排在一行；保存后验证后续运行确实读取配置。能力使用 Halo Card，Agent、工具、权限和确认标记来自代码注册，默认示例无 Agent 时不得虚构。

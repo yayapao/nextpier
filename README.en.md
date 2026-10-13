@@ -64,7 +64,7 @@ Global settings at `/settings/system` supports light, dark, and system themes. T
 
 ## Integrate into an existing project
 
-Give Codex the [integration prompt](docs/harness-integration.md) with the NextPier source and target project paths. The `harness-integrator` skill discovers and reviews business tools, implements a basic agent and executable workflow, and integrates global chat and Harness settings using the target stack.
+Give Codex the [integration prompt](docs/harness-integration.md) with the NextPier Git repository and target project path. A verified local checkout is also supported. The `harness-integrator` skill discovers and reviews business tools, implements a basic agent and executable workflow, and integrates global chat and Harness settings using the target stack.
 
 ```bash
 npm run harness:prepare -- --project /path/to/existing-project

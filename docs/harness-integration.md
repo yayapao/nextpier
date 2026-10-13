@@ -1,22 +1,28 @@
 # 将 Harness 接入已有项目
 
-将下面的 Prompt 交给能读取源模板和目标项目的 Codex。它会按目标技术栈发现业务工具、适配宿主、开发基础 Agent 与流程，并生成全局对话框和 Harness 管理页。目标无需先初始化成 NextPier。
+将下面的 Prompt 交给能读取源模板和目标项目的 Codex。默认使用 NextPier 的 GitHub 仓库地址，Codex 会在目标项目之外准备源码，再按目标技术栈发现业务工具、适配宿主、开发基础 Agent 与流程，并生成全局对话框和 Harness 管理页。目标无需先初始化成 NextPier。
 
 ## 直接使用的 Prompt
 
-只需替换源模板与目标项目路径；有明确业务场景时一并提供。
+只需替换目标项目路径；有明确业务场景时一并提供。源仓库可以固定到 tag 或 commit，默认使用 `main`。
 
 ```text
 请将 NextPier 的 Browser Harness 接入以下已有项目并直接完成实现。
 
-NextPier 源模板：[NextPier 本地绝对路径]
+NextPier 源仓库：https://github.com/yayapao/nextpier.git
+NextPier 版本：main（如需复现，请替换为 tag 或完整 commit SHA）
 目标项目：[目标项目绝对路径]
 业务场景：[可选；为空时从项目现有业务里选择一个真实的只读闭环]
 模型配置：[可选；优先复用目标项目现有服务端模型配置]
 
-先读取源模板的 .agents/skills/harness-integrator/SKILL.md，按该 Skill 完成全过程。
+先在目标项目之外准备 NextPier 源码：
+1. 如果已有对应版本的本地 checkout，先验证它是目标版本并直接复用。
+2. 否则在目标项目之外获取源码：版本是分支或 tag 时执行 `git clone --depth 1 --branch <版本> https://github.com/yayapao/nextpier.git <源目录>`；版本是完整 commit SHA 时执行普通 clone 或按该 SHA fetch，再 `git checkout --detach <SHA>`，并记录实际 SHA。
+3. 读取 `<源目录>/.agents/skills/harness-integrator/SKILL.md` 以及它引用的 references；不要只读取 GitHub 的 `blob` 或 `raw` 单文件地址。
+4. 使用 `<源目录>/scripts/harness.mjs prepare --project <目标项目绝对路径>` 生成迁移包和工具发现报告。
+
 读取目标项目规范并保留其技术栈、鉴权、数据库、路由和用户改动。
-通过源模板的 scripts/harness.mjs prepare --project 准备迁移包与工具发现报告。
+按迁移包中的 Skill 完成全过程。
 审核现有服务、API 和数据契约，开发真实业务工具、一个基础 Agent 和一个可执行流程，
 接入全局对话框入口及 Harness 管理页面，能力列表来自实际注册结果。
 参数保存必须影响后续运行，写操作经权限检查和人工确认。
@@ -25,7 +31,7 @@ NextPier 源模板：[NextPier 本地绝对路径]
 区分已完成、实际检查结果和缺少配置或环境的具体未验证项。
 ```
 
-本机使用源模板 `/Users/yango/github/agents/nextpier` 时，第一项填写该路径即可。不在同一台机器上时，可让 Codex 先在目标之外通过 `git clone --depth 1 --branch main https://github.com/yayapao/nextpier.git` 获取源码，再读取 Skill；这不会覆盖目标项目。
+本机已有 `/Users/yango/github/agents/nextpier` checkout 时，可以把“NextPier 源仓库”替换为该本地路径，并直接使用其 `scripts/harness.mjs`。GitHub 仓库为私有仓库时，使用当前机器已有的 Git 凭据或 SSH 配置；不要把 token、密码或带凭据的 URL 写进 Prompt。源目录、迁移包和目标项目必须相互独立。
 
 ## 准备命令
 
@@ -35,7 +41,7 @@ NextPier 源模板：[NextPier 本地绝对路径]
 node /path/to/nextpier/scripts/harness.mjs prepare --project /path/to/target
 ```
 
-在 NextPier 根目录执行的等价命令：
+在已 clone 的 NextPier 根目录执行的等价命令：
 
 ```bash
 npm run harness:prepare -- --project /path/to/target
@@ -57,6 +63,8 @@ npm run harness:prepare -- --project /path/to/target
 按包内 harness-integrator Skill 发现和审核真实业务工具，完成基础 Agent、流程、全局对话框与管理页。
 保留现有工程和用户改动，完成允许的验证并说明未验证项，默认不启动 dev/build 或打包。
 ```
+
+迁移包模式不需要访问原始 GitHub 仓库：先读取包内 `manifest.json`、`discovery.json` 和 `source/.agents/skills/harness-integrator/SKILL.md`。`manifest.source` 只是生成机器上的记录，不能作为后续会话的唯一源码路径。
 
 Node.js 20.9+ 可准备迁移包。源模板安装过 npm 依赖时，使用 TypeScript AST 发现 JS/TS 导出函数；未安装时仍提供文件与 JSON OpenAPI 清单，Codex 继续源码发现。默认扫描上限为 5000 个目录条目、单文件 256 KiB，报告明确列出截断和跳过项。其他语言、类方法、重导出和 YAML OpenAPI 由 Agent 补查。
 

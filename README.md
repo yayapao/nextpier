@@ -64,7 +64,7 @@ npm run harness:doctor
 
 ## 迁移到已有项目
 
-将 [跨项目接入 Prompt](docs/harness-integration.md) 发给 Codex，指定当前 NextPier 的源码路径与目标项目路径。`harness-integrator` Skill 会发现和审核业务工具，完成基础 Agent、可执行流程、全局对话入口与管理页，并适配目标技术栈。
+将 [跨项目接入 Prompt](docs/harness-integration.md) 发给 Codex，默认使用 NextPier GitHub 仓库地址，也可指定已验证的本地 checkout。`harness-integrator` Skill 会发现和审核业务工具，完成基础 Agent、可执行流程、全局对话入口与管理页，并适配目标技术栈。
 
 ```bash
 npm run harness:prepare -- --project /path/to/existing-project
