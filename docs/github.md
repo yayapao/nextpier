@@ -32,7 +32,7 @@ nextjs react typescript tailwindcss wails desktop-app starter-template animateic
 git remote set-url origin git@github.com:yayapao/nextpier.git
 ```
 
-在 About 中填写上述描述和 Topics。README 保留中文入口，`README.en.md` 为英文入口；两者的安装命令和建项 Prompt 保持一致。
+在 About 中填写上述描述和 Topics。`README.md` 是英文主入口，`README.en.md` 提供英文镜像；两者的安装命令和 Agent Prompt 保持一致。
 
 新桌面工程使用 `NEXTPIER_*` 与 `desktop/nextpier.json`。旧工程兼容规则见 [桌面指南](desktop.md)。
 

@@ -1,12 +1,12 @@
 # NextPier
 
-**给 Agent 的 Next.js 工作台起点。**
+**A Next.js workbench starter for agents.**
 
-一句 Prompt 创建业务页面，一条命令接入 [app-harness](https://github.com/yayapao/app-harness)，需要桌面时再加 Wails。NextPier 把页面、数据、AI 工具和桌面能力放进一条清晰的交付路径。
+Give an agent one prompt to build the product, one command to add [app-harness](https://github.com/yayapao/app-harness), and one more command when the product needs a Wails desktop shell.
 
-[English](README.en.md) · [给 Agent 的建项 Prompt](docs/ai-agent.md) · [app-harness](https://github.com/yayapao/app-harness) · [开发指南](docs/development.md)
+[Agent prompt](docs/ai-agent.md) · [app-harness](https://github.com/yayapao/app-harness) · [Development](docs/development.md)
 
-## 30 秒开工
+## Start in 30 seconds
 
 ```bash
 NEXTPIER_TEMPLATE_DIR="$(mktemp -d)"
@@ -17,70 +17,70 @@ npm install
 npm run dev
 ```
 
-打开 [localhost:3900](http://localhost:3900)。已 clone 的仓库可以在仓库内使用 `--project .`，初始化会保留 `.git`、`LICENSE`、README 和已有业务文件。完整流程见[开发指南](docs/development.md)。
+Open [localhost:3900](http://localhost:3900). To initialize a repository you already cloned, use `--project .`; `.git`, `LICENSE`, README, and user files are preserved. See the [development guide](docs/development.md) for the full flow.
 
-## 直接交给 ChatGPT / Codex
+## Give it to ChatGPT / Codex
 
-把方括号替换成你的项目内容：
+Replace the brackets and send this prompt:
 
 ```text
-请基于 https://github.com/yayapao/nextpier 在 [目标目录] 创建 [项目名]。
+Use https://github.com/yayapao/nextpier to create [project name] in [target directory].
 
-使用者和目标：[谁使用、要完成什么]
-主要流程：[按顺序列出流程和验收条件]
-数据来源：[API、数据库或单用户本地持久化]
-能力：[Web / Web+AI / Wails / Wails+AI]
-npm 包名：[小写英文，可含数字和连字符]
+Users and goal: [who uses it and what they need]
+Workflows: [list the steps and acceptance criteria]
+Data: [API, database, or single-user local persistence]
+Capabilities: [Web / Web+AI / Wails / Wails+AI]
+npm package name: [lowercase English; digits and hyphens allowed]
 
-先读取目标目录，再按 NextPier 的 AGENTS.md、docs/README.md 和当前 Next.js 文档执行。
-目标为空或只有 .git、LICENSE、README 时，按 docs/development.md 在目标目录外获取模板并运行 scripts/init.mjs；已有 NextPier 或业务项目则增量处理。
-保留目标仓库的 Git 历史、remote、LICENSE 和用户文件；冲突先读取差异并合并。
-完成真实页面、数据读写、校验、加载、空状态和错误处理，不只生成演示壳子。
-需要 AI 时运行 npm run upgrade:harness，使用 GitHub app-harness 接入业务工具、Agent、流程、对话入口和管理页。
-需要桌面时运行 npm run upgrade:wails -- --name "[展示名]" --id [应用 ID]。
-运行 typecheck、lint、test:cli；接入 app-harness 后再运行 test:harness。
-默认不启动 dev、不 build、不打包；交付时列出已完成能力、检查结果和未验证项。
+Read the target first, then follow its AGENTS.md, docs/README.md, and the installed Next.js documentation.
+If the target is empty or only has .git, LICENSE, or README, fetch the template outside it and run scripts/init.mjs as described in docs/development.md; extend existing NextPier or business projects in place.
+Keep the target Git history, remote, LICENSE, and user files; read and merge conflicts before writing.
+Build a real business flow with data, validation, loading, empty, and error states.
+For AI, run npm run upgrade:harness and use GitHub app-harness for business tools, agents, workflows, chat, and the management page.
+For desktop, run npm run upgrade:wails -- --name "[display name]" --id [app ID].
+Run typecheck, lint, and test:cli; run test:harness after adding app-harness.
+Do not start dev, build, or package by default. Report completed capabilities, checks, and unverified items.
 ```
 
-更多可复制 Prompt 和业务示例见[建项指南](docs/ai-agent.md)。
+See the [agent guide](docs/ai-agent.md) for reusable prompts and business examples.
 
-## Agent 能力
+## What an agent can do
 
-- 读取项目规范和 Next.js 文档，识别目标项目的技术栈与现有代码。
-- 安全初始化或增量接入，保留用户仓库和业务改动。
-- 使用 Server Components、Server Actions、Zod 和现有数据源完成真实业务闭环。
-- 通过 app-harness 发现并审核业务工具，创建基础 Agent、可执行流程、全局对话框和管理页。
-- 对写入和删除操作执行权限校验与人工确认，区分静态检查、运行时测试、浏览器验收和真实模型验证。
+- Read project rules and Next.js docs, then work with the existing stack.
+- Initialize or extend a project while preserving its repository and business changes.
+- Build real flows with Server Components, Server Actions, Zod, and the project data source.
+- Use app-harness to review business tools and create an agent, executable workflow, global chat, and management page.
+- Enforce authorization and confirmation for writes and deletes, while reporting static, runtime, browser, and model validation separately.
 
-## 接入 app-harness
+## Add app-harness
 
-在 NextPier 项目根目录执行：
+Run this in a NextPier project:
 
 ```bash
 npm run upgrade:harness
 npm run harness:doctor
 ```
 
-命令从 [GitHub app-harness](https://github.com/yayapao/app-harness) 获取运行时、UI、安装器和 Agent Skill，并写入当前项目。需要固定版本或本地联调时：
+The command fetches the runtime, UI, installer, and agent skill from [GitHub app-harness](https://github.com/yayapao/app-harness) and installs them into the project. Pin a version or use a local checkout when needed:
 
 ```bash
-npm run upgrade:harness -- --ref <tag或完整commit>
+npm run upgrade:harness -- --ref <tag-or-commit>
 npm run upgrade:harness -- --source /path/to/app-harness --skip-install
 ```
 
-接入后，顶部入口打开当前页对话框，`/harness` 是完整对话页，`/settings/harness` 管理模型参数、Agent、工具和权限。模型配置放在服务端环境变量；写操作必须确认。详细配置与验收见 [app-harness 文档](docs/harness.md)。
+After setup, the toolbar opens chat over the current page, `/harness` is the full chat view, and `/settings/harness` manages model settings, agents, tools, and permissions. Keep model credentials on the server and confirm write actions. See the [app-harness guide](docs/harness.md).
 
-## 给已有项目接入
+## Integrate an existing project
 
-让 Agent 读取[跨项目接入 Prompt](docs/harness-integration.md)，或先生成迁移包：
+Give the agent the [integration prompt](docs/harness-integration.md), or prepare a source kit first:
 
 ```bash
 npm run harness:prepare -- --project /path/to/existing-project
 ```
 
-命令会准备 app-harness 源码、扫描报告和接入说明，目标项目由 Agent 按自身技术栈完成适配。目标项目不需要先变成 NextPier。
+The command prepares app-harness source, a discovery report, and integration instructions. The agent adapts the result to the target stack; the target does not need to become a NextPier project first.
 
-## 再加桌面
+## Add desktop
 
 ```bash
 npm run upgrade:wails -- --name MyApp --id com.example.myapp
@@ -88,17 +88,17 @@ npm run desktop:doctor
 npm run desktop:dev
 ```
 
-Wails 与 Web 共用页面、Server Actions、SSE 和 app-harness 运行时。桌面环境与打包命令见[桌面指南](docs/desktop.md)。
+Wails shares the Web pages, Server Actions, SSE, and app-harness runtime. See the [desktop guide](docs/desktop.md) for environment and packaging commands.
 
-## 默认技术选择
+## Opinionated defaults
 
-- Next.js 16 App Router、React 19、TypeScript、Tailwind CSS 4。
-- AnimateIcons、Cult UI、shadcn/Radix，紧凑控件和语义化主题。
-- Server Components 读取初始数据，Server Actions 处理业务写入。
-- app-harness 提供可替换的模型、存储、工具、Agent 和流程。
+- Next.js 16 App Router, React 19, TypeScript, and Tailwind CSS 4.
+- AnimateIcons, Cult UI, shadcn/Radix, compact controls, and semantic themes.
+- Server Components for initial reads and Server Actions for business writes.
+- app-harness with replaceable models, storage, tools, agents, and workflows.
 
-## 文档
+## Read on
 
-[建项 Prompt](docs/ai-agent.md) · [开发指南](docs/development.md) · [组件与样式](docs/design-system.md) · [app-harness](docs/harness.md) · [桌面指南](docs/desktop.md) · [GitHub 发布](docs/github.md)
+[Agent prompts](docs/ai-agent.md) · [Development](docs/development.md) · [Components and styles](docs/design-system.md) · [app-harness](docs/harness.md) · [Desktop](docs/desktop.md) · [GitHub publishing](docs/github.md)
 
-代码采用 [MIT](LICENSE)；Cult UI 组件保留来源与许可证。
+MIT licensed; Cult UI components retain their source attribution and license.

@@ -4,7 +4,7 @@
 
 Give an agent one prompt to build the product, one command to add [app-harness](https://github.com/yayapao/app-harness), and one more command when the product needs a Wails desktop shell.
 
-[中文](README.md) · [Agent prompt](docs/ai-agent.md) · [app-harness](https://github.com/yayapao/app-harness) · [Development](docs/development.md)
+[Primary README](README.md) · [Agent prompt](docs/ai-agent.md) · [app-harness](https://github.com/yayapao/app-harness) · [Development](docs/development.md)
 
 ## Start in 30 seconds
 
