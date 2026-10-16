@@ -42,7 +42,7 @@ OPENAI_BASE_URL=https://api.openai.com/v1
 
 新工程 `harness:doctor` 使用生成的本地检查脚本，可离线检查文件、依赖与环境配置，不请求模型。旧工程可用 `node scripts/harness.mjs doctor --source /path/to/app-harness` 检查。
 
-业务接入需替换演示工具，复用登录鉴权、数据范围和持久化存储；写操作保持人工确认。细节与验收见 [app-harness NextPier 文档](https://github.com/yayapao/app-harness/blob/main/docs/nextpier.md)。
+业务接入需替换演示工具，复用登录鉴权、数据范围和持久化存储；写操作保持人工确认。细节与验收见 [app-harness README](https://github.com/yayapao/app-harness#add-it-to-an-existing-app)。
 
 ## 验证
 
