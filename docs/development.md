@@ -52,16 +52,16 @@ npm install
 | `npm run init:project -- --project ../my-app --name my-app` | 将当前模板导入独立的目标目录                |
 | `npm run typecheck`                                         | TypeScript 检查                             |
 | `npm run lint`                                              | ESLint 检查                                 |
-| `npm run test:cli`                                          | Wails、Harness 升级与运行时收集测试         |
+| `npm run test:cli`                                          | Wails、app-harness 升级与运行时收集测试         |
 | `npm run test:desktop-template`                             | 临时 Wails 工程的 Go 测试，需要桌面编译依赖 |
 | `npm run upgrade:wails`                                     | 生成桌面工程                                |
 | `npm run upgrade:harness`                                   | 从 GitHub app-harness 接入并安装依赖                  |
 | `npm run harness:prepare -- --project /path/to/target`      | 为任意已有项目准备迁移包和候选工具报告      |
-| `npm run test:harness-template`                             | 临时 Harness 工程的类型、Lint 与运行时测试  |
+| `npm run test:harness-template`                             | 临时 app-harness 工程的类型、Lint 与运行时测试  |
 
 升级后增加 `desktop:doctor`、`desktop:dev`、`desktop:build`，用法见 [桌面指南](desktop.md)。ChatGPT / Codex 的执行规则以 [AGENTS.md](../AGENTS.md) 为准。
 
-顶部全局设置入口为 `/settings/system`，可保存浅色、深色或跟随系统。Harness 升级后增加 `harness:doctor` 和 `test:harness`，对话入口为 `/harness`，管理页为 `/settings/harness`。模型、会话与插件配置见 [Browser Harness](harness.md)。
+顶部全局设置入口为 `/settings/system`，可保存浅色、深色或跟随系统。app-harness 接入后增加 `harness:doctor` 和 `test:harness`，对话入口为 `/harness`，管理页为 `/settings/harness`。模型、会话与插件配置见 [app-harness](harness.md)。
 
 ## 文件放哪里
 
@@ -75,11 +75,11 @@ lib/                  数据读取、工具、校验与 provider
 types/               共享类型
 public/               静态资源
 docs/                 建项 Prompt、开发、样式与集成文档
-scripts/              模板导入、Wails 与 Harness CLI、运行时收集和测试
+scripts/              模板导入、Wails 与 app-harness CLI、运行时收集和测试
 templates/wails/      Wails 工程模板
-                      Browser Harness 模板从 GitHub app-harness 获取
+                      app-harness 模板从 GitHub 获取
 desktop/              升级后生成的桌面工程
-harness/              升级后生成的 AI 对话核心、适配器与插件
+harness/              升级后生成的 app-harness 核心、适配器与插件
 nextpier.config.json  可选功能导航开关
 ```
 

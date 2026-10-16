@@ -2,7 +2,7 @@
 
 Wails 提供原生窗口，Next.js 在本机处理页面和数据。现有 Web 项目可以继续使用 Server Actions。
 
-需要 AI 对话时，可叠加 [Browser Harness](harness.md) 的 CLI 集成；桌面代理同时支持它的 Server Actions 和 SSE 消息流。
+需要 AI 对话时，可叠加 [app-harness](harness.md) 的 CLI 集成；桌面代理同时支持它的 Server Actions 和 SSE 消息流。
 
 ## 一键生成工程
 

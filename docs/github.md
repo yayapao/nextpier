@@ -7,19 +7,19 @@
 GitHub About 描述与 `package.json.description` 保持一致：
 
 ```text
-Next.js workbench starter with AnimateIcons and Cult UI. Add a Wails desktop app or Browser Harness AI chat with one command.
+Next.js workbench starter for agents with AnimateIcons, Cult UI, Wails, and app-harness AI chat.
 ```
 
 中文介绍：
 
 ```text
-面向工作台的 Next.js 模板，内置 AnimateIcons、Cult UI 和紧凑样式。通过 CLI 接入 Wails 桌面应用与 Browser Harness AI 对话，保留 Server Actions。
+面向 Agent 的 Next.js 工作台模板，提供 AnimateIcons、Cult UI、Wails 和 app-harness AI 对话。
 ```
 
 Topics：
 
 ```text
-nextjs react typescript tailwindcss wails desktop-app starter-template animateicons cult-ui shadcn-ui browser-harness ai-agent
+nextjs react typescript tailwindcss wails desktop-app starter-template animateicons cult-ui shadcn-ui app-harness ai-agent
 ```
 
 ## 仓库地址

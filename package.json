@@ -1,7 +1,7 @@
 {
   "name": "nextpier",
   "version": "0.1.0",
-  "description": "Next.js workbench starter with AnimateIcons and Cult UI. Add a Wails desktop app or Browser Harness AI chat with one command.",
+  "description": "Next.js workbench starter for agents with AnimateIcons, Cult UI, Wails, and app-harness AI chat.",
   "private": true,
   "license": "MIT",
   "repository": {
@@ -19,7 +19,7 @@
     "animateicons",
     "cult-ui",
     "shadcn-ui",
-    "browser-harness",
+    "app-harness",
     "ai-agent"
   ],
   "scripts": {

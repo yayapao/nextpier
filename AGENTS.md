@@ -11,7 +11,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 - 技术栈：Next.js 16 App Router、React 19、TypeScript、Tailwind CSS 4。
 - 编码工具使用 ChatGPT / Codex，项目规范保存在 `AGENTS.md`，项目技能保存在 `.agents/skills/`。
-- 开始任务先读本文件和 `docs/README.md`；界面任务读 `docs/design-system.md`，桌面任务读 `docs/desktop.md`，Harness 任务读 `docs/harness.md`。
+- 开始任务先读本文件和 `docs/README.md`；界面任务读 `docs/design-system.md`，桌面任务读 `docs/desktop.md`，app-harness 任务读 `docs/harness.md`。
 - 从模板创建业务项目可使用 `docs/ai-agent.md` 的 Prompt；按业务需求完成页面、数据和可选 CLI 集成。
 - 已 clone 的新仓库通过模板的 `scripts/init.mjs --project` 原地初始化；模板放在目标目录外，保留目标的 `.git`、许可证和用户文件，具体命令见 `docs/development.md`。
 - 保留已有工作区改动，不擅自回退、覆盖或清理用户文件。
@@ -51,13 +51,13 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 ## 文件与验证
 
-- Harness 通过 `npm run upgrade:harness` 从 `https://github.com/yayapao/app-harness.git` 可选接入，NextPier 不内置核心或模板；核心、适配器、宿主和业务插件分层，模型密钥仅在服务端使用。
-- 跨项目迁移使用 `docs/harness-integration.md` 指向的 app-harness Prompt 与源仓库 Skill；完整 Skill、扫描与安装逻辑只在 app-harness 维护。支持 `--ref` 固定版本及 `--source` 外部本地源码。先生成外部迁移包和候选报告，再按目标技术栈实施；候选不得自动注册，真实业务工具、基础 Agent 和流程须有源码映射与运行验证。
-- Harness 新工具同时更新注册与权限；写入、删除必须人工确认。浏览器会话和业务鉴权分别校验，追踪默认不记录载荷。
-- Harness 顶部入口用拦截路由在当前页打开 shadcn Dialog，保留 `/harness` 直达，管理页为 `/settings/harness`，旧 `/harness/settings` 跳转兼容。根 layout 保留 `harness` 插槽，关闭恢复入口焦点；离开对话时取消消息流。
-- Harness 参数使用 Halo Input，桌面上模型、运行限额、输出上限排在一行；保存后验证后续运行确实读取配置。能力使用 Halo Card，Agent、工具、权限和确认标记来自代码注册，默认示例无 Agent 时不得虚构。
+- app-harness 通过 `npm run upgrade:harness` 从 `https://github.com/yayapao/app-harness.git` 接入；核心、适配器、宿主和业务插件分层，模型密钥仅在服务端使用。
+- app-harness 跨项目迁移使用 `docs/harness-integration.md` 指向的 Prompt 与源仓库 Skill；支持 `--ref` 固定版本及 `--source` 外部本地源码。先生成迁移包和候选报告，再按目标技术栈实施；候选不得自动注册，真实业务工具、基础 Agent 和流程须有源码映射与运行验证。
+- app-harness 新工具同时更新注册与权限；写入、删除必须人工确认。浏览器会话和业务鉴权分别校验，追踪默认不记录载荷。
+- app-harness 顶部入口用拦截路由在当前页打开 shadcn Dialog，完整页面为 `/harness`，管理页为 `/settings/harness`。根 layout 保留 `harness` 插槽，关闭恢复入口焦点；离开对话时取消消息流。
+- app-harness 参数使用 Halo Input，桌面上模型、运行限额、输出上限排在一行；保存后验证后续运行确实读取配置。能力使用 Halo Card，Agent、工具、权限和确认标记来自代码注册，默认示例无 Agent 时不得虚构。
 - 能力 Popover 与卡片同宽，锚定静止的卡片外层；按实际卡片高度定位，保留碰撞处理。动画只作用于弹层，禁止跨 Portal 共享 `layoutId`，切换时只保留一个弹层并正确恢复焦点。
-- 基础模板的 Harness 验证用 `npm run test:harness-template`；业务工程生成后用 `npm run test:harness`。不以演示模型结果代替真实模型或浏览器验收。
+- 基础模板的 app-harness 验证用 `npm run test:harness-template`；业务工程生成后用 `npm run test:harness`。不以演示模型结果代替真实模型或浏览器验收。
 
 - 单个代码文件不超过 360 行；按职责拆分，不通过压缩格式达标。生成文件不手工修改。
 - 不自动运行 dev、build 或桌面打包；仅在用户当轮明确要求时执行。

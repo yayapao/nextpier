@@ -1,6 +1,6 @@
 # 组件与样式
 
-沿用 Niu 的紧凑工作台布局：标题与操作同一行，内容直接展开，数据留在视线里。Web 保持窄屏可用，桌面窗口尺寸见 [桌面指南](desktop.md)。
+采用紧凑工作台布局：标题与操作同一行，内容直接展开，数据留在视线里。Web 保持窄屏可用，桌面窗口尺寸见 [桌面指南](desktop.md)。
 
 ## 先选组件
 
@@ -47,9 +47,9 @@ Cult UI 组件按源码放在 `components/ui/`，来源和许可证见 `cult-ui.
 
 卡片用于重复条目或需要独立边框的工具，避免嵌套。弹窗统一用 shadcn Dialog，宽度可选 `sm:max-w-125`、`sm:max-w-180`、`sm:max-w-275`。
 
-## Harness 交互
+## app-harness 交互
 
-顶部对话入口在当前业务页打开 Dialog；直接访问 `/harness` 使用完整页面。对话 UI 对齐 ViewAI：`DialogContent layout="panel"` 提供无内边距面板，Harness 单独使用无模糊遮罩，宽度上限 1152px，高度 `min(760px, 100dvh - 24px)`。桌面会话侧栏为 256px；低于 640px 时由工具栏打开会话侧栏，Escape、遮罩和关闭按钮只关闭顶层弹层并恢复焦点。消息与输入区共用 768px 内容宽度，消息区独立滚动，输入区保持可见。用户消息右对齐，助手消息带中性图标；只有最后一条助手消息无正文且仍在运行时显示等待提示。用户上翻历史时不强制滚到底部；切换会话重置滚动位置。输入框自动增高，Enter 发送、Shift+Enter 换行，输入法组合键不提交，空白不可发送；动画遵循减少动态效果。嵌套确认、运行记录和能力明细继续使用 Radix 的焦点与关闭管理。关闭后恢复到顶部入口，管理按钮进入 `/settings/harness`。
+顶部对话入口在当前业务页打开 Dialog；直接访问 `/harness` 使用完整页面。对话 UI 对齐 ViewAI：`DialogContent layout="panel"` 提供无内边距面板，app-harness 单独使用无模糊遮罩，宽度上限 1152px，高度 `min(760px, 100dvh - 24px)`。桌面会话侧栏为 256px；低于 640px 时由工具栏打开会话侧栏，Escape、遮罩和关闭按钮只关闭顶层弹层并恢复焦点。消息与输入区共用 768px 内容宽度，消息区独立滚动，输入区保持可见。用户消息右对齐，助手消息带中性图标；只有最后一条助手消息无正文且仍在运行时显示等待提示。用户上翻历史时不强制滚到底部；切换会话重置滚动位置。输入框自动增高，Enter 发送、Shift+Enter 换行，输入法组合键不提交，空白不可发送；动画遵循减少动态效果。嵌套确认、运行记录和能力明细继续使用 Radix 的焦点与关闭管理。关闭后恢复到顶部入口，管理按钮进入 `/settings/harness`。
 
 管理页参数用 Halo Input，桌面布局将模型、运行限额、单轮输出上限排在一行，窄屏按字段换行。已注册能力用 Halo Card 展示标题与描述，点击后用 Agent / 工具 Halo Tabs 查看对应明细、权限及确认标记。保存使用 Texture Button，恢复与关闭使用动态图标按钮。
 
@@ -57,11 +57,11 @@ Popover 通过 `--radix-popover-trigger-width` 跟随卡片宽度，外层作为
 
 ## 全局设置
 
-顶部齿轮始终进入 `/settings/system`；启用 Harness 后，`SettingsShell` 增加 `/settings/harness`。设置导航使用普通链接和 `aria-current`，桌面侧栏、窄屏换行；两个页面共享布局，保留返回工作台入口。
+顶部齿轮始终进入 `/settings/system`；启用 app-harness 后，`SettingsShell` 增加 `/settings/harness`。设置导航使用普通链接和 `aria-current`，桌面侧栏、窄屏换行；两个页面共享布局，保留返回工作台入口。
 
 常规设置用 Halo 视觉的分段单选选择浅色、深色或跟随系统，保留 RadioGroup 的键盘与单选语义，通过 Server Action 校验和保存至 `NEXTPIER_DATA_DIR/config.json`，未配置时为 `data/config.json`。保存成功后更新 `next-themes`；恢复按钮只撤销未保存修改。该文件是宿主配置，多用户应用应接入自己的鉴权和偏好存储。
 
-Halo Tabs 沿用 Niu / Cult UI 的活动项光晕，使用当前 Radix 的键盘导航和状态。Motion 的活动指示器限制在同一 Tabs 内，减少动态效果时无过渡；不替换基础 `Tabs`，也不增加 Base UI 依赖。
+Halo Tabs 使用 Cult UI 的活动项光晕，使用当前 Radix 的键盘导航和状态。Motion 的活动指示器限制在同一 Tabs 内，减少动态效果时无过渡；不替换基础 `Tabs`，也不增加 Base UI 依赖。
 
 ## 动画跟着操作走
 
