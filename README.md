@@ -60,11 +60,13 @@ npm run upgrade:harness
 npm run harness:doctor
 ```
 
-顶部全局设置进入 `/settings/system`，支持浅色、深色和跟随系统。AI 对话入口在当前页打开弹窗，`/harness` 保留完整对话页；统一设置中的 `/settings/harness` 提供 Halo 运行参数、能力卡片及同宽 Agent / 工具明细，旧 `/harness/settings` 自动跳转。默认演示模式无需 Key；接模型、换插件或存储，见 [Browser Harness](docs/harness.md)。Web 与 Wails 共用这套运行时。
+该命令从 [GitHub app-harness](https://github.com/yayapao/app-harness) 获取模板并安装；NextPier 不再内置 Harness 实现。可用 `--ref <tag或commit>` 固定版本，或用 `--source /path/to/app-harness` 联合开发。
+
+顶部全局设置进入 `/settings/system`，支持浅色、深色和跟随系统。AI 对话入口在当前页打开弹窗，`/harness` 保留完整对话页；统一设置中的 `/settings/harness` 提供 Halo 运行参数、能力卡片及同宽 Agent / 工具明细，旧 `/harness/settings` 自动跳转。对话布局与 ViewAI 对齐，支持移动会话侧栏、消息滚动跟随、自动增高输入与分层关闭。默认演示模式无需 Key；接模型、换插件或存储，见 [Browser Harness](docs/harness.md)。Web 与 Wails 共用这套运行时。
 
 ## 迁移到已有项目
 
-将 [跨项目接入 Prompt](docs/harness-integration.md) 发给 Codex，默认使用 NextPier GitHub 仓库地址，也可指定已验证的本地 checkout。`harness-integrator` Skill 会发现和审核业务工具，完成基础 Agent、可执行流程、全局对话入口与管理页，并适配目标技术栈。
+将 [跨项目接入 Prompt](docs/harness-integration.md) 发给 Codex，使用独立的 [GitHub app-harness](https://github.com/yayapao/app-harness) 仓库，也可指定已验证的本地 checkout。`harness-integrator` Skill 会发现和审核业务工具，完成基础 Agent、可执行流程、全局对话入口与管理页，并适配目标技术栈。
 
 ```bash
 npm run harness:prepare -- --project /path/to/existing-project

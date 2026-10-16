@@ -55,7 +55,7 @@ npm install
 | `npm run test:cli`                                          | Wails、Harness 升级与运行时收集测试         |
 | `npm run test:desktop-template`                             | 临时 Wails 工程的 Go 测试，需要桌面编译依赖 |
 | `npm run upgrade:wails`                                     | 生成桌面工程                                |
-| `npm run upgrade:harness`                                   | 生成 AI 对话工程并安装依赖                  |
+| `npm run upgrade:harness`                                   | 从 GitHub app-harness 接入并安装依赖                  |
 | `npm run harness:prepare -- --project /path/to/target`      | 为任意已有项目准备迁移包和候选工具报告      |
 | `npm run test:harness-template`                             | 临时 Harness 工程的类型、Lint 与运行时测试  |
 
@@ -77,7 +77,7 @@ public/               静态资源
 docs/                 建项 Prompt、开发、样式与集成文档
 scripts/              模板导入、Wails 与 Harness CLI、运行时收集和测试
 templates/wails/      Wails 工程模板
-templates/harness/    Browser Harness 工程模板
+                      Browser Harness 模板从 GitHub app-harness 获取
 desktop/              升级后生成的桌面工程
 harness/              升级后生成的 AI 对话核心、适配器与插件
 nextpier.config.json  可选功能导航开关

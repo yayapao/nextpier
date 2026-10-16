@@ -14,7 +14,6 @@ import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 import { initializeProject } from '../lib/init-project.mjs';
 import { exists } from '../lib/upgrade-wails.mjs';
-import { upgradeHarness } from '../lib/upgrade-harness.mjs';
 import { upgradeWails } from '../lib/upgrade-wails.mjs';
 
 const repository = fileURLToPath(new URL('../../', import.meta.url));
@@ -102,24 +101,20 @@ test('initializing a cloned repository preserves Git history, origin and license
     'scripts/init.mjs',
     'scripts/lib/init-project.mjs',
     'templates/wails/go.mod',
-    'templates/harness/app/harness/page.tsx',
+    'scripts/lib/app-harness-source.mjs',
   ])
     assert.ok(await exists(path.join(project, relative)), relative);
   for (const relative of [
     'node_modules', '.next', 'data', 'CLAUDE.md', '.claude',
+    'templates/harness', 'harness', '.agents/skills/harness-integrator',
   ])
     assert.equal(await exists(path.join(project, relative)), false, relative);
 
-  await upgradeHarness(
-    project,
-    path.join(project, 'templates', 'harness')
-  );
   await upgradeWails(
     project,
     path.join(project, 'templates', 'wails'),
     { name: 'Starbaby', id: 'com.example.starbaby' }
   );
-  assert.ok(await exists(path.join(project, 'harness', 'nextpier.json')));
   assert.ok(await exists(path.join(project, 'desktop', 'nextpier.json')));
   assert.equal(
     await readFile(path.join(project, 'LICENSE'), 'utf8'),

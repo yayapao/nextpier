@@ -39,6 +39,9 @@ Update the name, metadata, and README. Run typecheck, lint, and test:cli; run te
 Complete the implementation. Do not start dev, build, or package by default. Report commands, check results, and anything still unverified.
 ```
 
+Harness is fetched from [GitHub app-harness](https://github.com/yayapao/app-harness); its implementation is maintained there. Use `--ref <tag-or-commit>` to pin a source version or `--source /path/to/app-harness` for local development. Existing generated code is preserved.
+
+
 The [ChatGPT / Codex guide](docs/ai-agent.md) has a fuller prompt and worked scenarios in Chinese.
 
 ## Go desktop
@@ -60,11 +63,11 @@ npm run upgrade:harness
 npm run harness:doctor
 ```
 
-Global settings at `/settings/system` supports light, dark, and system themes. The toolbar opens AI chat over the current page; `/harness` remains the full chat view. `/settings/harness` shares the settings navigation and provides Halo inputs, capability cards, and Agent / tool tabs in aligned popovers. The old `/harness/settings` address redirects there. Demo mode works without an API key. Replace the model, plugins, or store as your app grows; see [Browser Harness](docs/harness.md). The same runtime works on the web and in Wails.
+Global settings at `/settings/system` supports light, dark, and system themes. The toolbar opens AI chat over the current page; `/harness` remains the full chat view. `/settings/harness` shares the settings navigation and provides Halo inputs, capability cards, and Agent / tool tabs in aligned popovers. The old `/harness/settings` address redirects there. The chat layout follows ViewAI, with a mobile conversation drawer, scroll following, an auto-growing composer, and layered dismissal. Demo mode works without an API key. Replace the model, plugins, or store as your app grows; see [Browser Harness](docs/harness.md). The same runtime works on the web and in Wails.
 
 ## Integrate into an existing project
 
-Give Codex the [integration prompt](docs/harness-integration.md) with the NextPier Git repository and target project path. A verified local checkout is also supported. The `harness-integrator` skill discovers and reviews business tools, implements a basic agent and executable workflow, and integrates global chat and Harness settings using the target stack.
+Give Codex the [integration prompt](docs/harness-integration.md) with the [app-harness Git repository](https://github.com/yayapao/app-harness) and target project path. A verified local checkout is also supported. The `harness-integrator` skill discovers and reviews business tools, implements a basic agent and executable workflow, and integrates global chat and Harness settings using the target stack.
 
 ```bash
 npm run harness:prepare -- --project /path/to/existing-project

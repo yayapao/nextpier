@@ -11,7 +11,10 @@ import {
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { upgradeHarness } from '../lib/upgrade-harness.mjs';
+import {
+  runHarnessCommand,
+  withHarnessSource,
+} from '../lib/app-harness-source.mjs';
 
 const repository = fileURLToPath(new URL('../../', import.meta.url));
 const temporary = await mkdtemp(
@@ -92,7 +95,16 @@ try {
       path.join(project, 'node_modules', entry),
       process.platform === 'win32' ? 'junction' : undefined
     );
-  await upgradeHarness(project, path.join(repository, 'templates', 'harness'));
+  await withHarnessSource(
+    project,
+    { source: process.env.APP_HARNESS_SOURCE },
+    (source) =>
+      runHarnessCommand(
+        source,
+        ['install-nextpier', '--project', project, '--skip-install'],
+        project
+      )
+  );
   await run(
     process.execPath,
     [path.join(project, 'scripts', 'harness.mjs'), 'doctor'],

@@ -49,7 +49,7 @@
    文案按项目语言编写；单个代码文件不超过 360 行。
 6. 按能力调用 CLI：
    - Web：直接完成业务。
-   - Web+AI：运行 npm run upgrade:harness，接入业务插件、模型和存储。
+   - Web+AI：运行 npm run upgrade:harness，从 GitHub app-harness 获取实现，再接入业务插件、模型和存储。
    - Wails：运行 npm run upgrade:wails -- --name "[项目展示名]" --id [桌面应用ID]。
    - Wails+AI：依次执行上述两种升级。
    用生成的工程和运行时继续开发。写入和删除工具保留人工确认，业务权限在工具内校验。
